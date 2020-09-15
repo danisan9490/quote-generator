@@ -54,8 +54,9 @@ async function getHackerQuote() {
   const proxyUrl = 'http://cors-anywhere.herokuapp.com/';
   const apiUrl = 'https://hackerman.wtf/api';
 
+
   try {
-    const response = await fetch(proxyUrl + apiUrl);
+    const response = await fetch(proxyURL + apiUrl);
     const data = await response.json();
     authorText.innerText = 'Unknown'
     // reduce fontsize for long quotes
@@ -63,8 +64,9 @@ async function getHackerQuote() {
     else quoteText.classList.remove('long-quote')
     quoteText.innerText = data.quotes[0];
   } catch (error) {
-    if (countErr < 10) getQuote();
-    else console.log(error);
+    console.log('Error with Hacker API: ', error);
+    alert("Hacker API is down");
+    getQuote();
   }
   removeLoadingSpinner();
 
@@ -85,4 +87,3 @@ twitterBtn.addEventListener('click', tweetQuote);
 
 // On Load
 getQuote();
-// getHackerQuote()
