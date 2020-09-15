@@ -1,10 +1,10 @@
-
 const quoteContainer = document.getElementById('quote-container');
 const quoteText = document.getElementById('quote');
 const authorText = document.getElementById('author');
 const twitterBtn = document.getElementById('twitter');
 const newQuoteBtn = document.getElementById('new-quote');
 const hackBtn = document.getElementById('new-haker-quote');
+const movieBtn = document.getElementById('movie-quote');
 const loader = document.getElementById('loader');
 const proxyUrl = `https://cors-anywhere.herokuapp.com/`;
 
@@ -33,7 +33,7 @@ async function getQuote() {
     const data = await response.json();
     data.quoteAuthor !== ""
       ? (authorText.innerText = data.quoteAuthor)
-      : (authorText.innerText = data.quoteAuthor);
+      : (authorText.innerText = 'Unknown');
 
     // Reduce font-size for long quotes
     data.quoteText.length > 120
@@ -51,7 +51,6 @@ async function getQuote() {
 async function getHackerQuote() {
   showLoadingSpinner();
 
-  // Proxy URL to make sure our API call
   const apiUrl = `https://hackerman.wtf/api`;
 
   try {
@@ -63,9 +62,31 @@ async function getHackerQuote() {
     else quoteText.classList.remove('long-quote');
     quoteText.innerText = data.quotes[0];
   } catch (error) {
-    console.log('Error with Hacker API: ', error);
-    alert("Hacker API is down");
+    console.log("Whoops could not retrieve quotes: " + error);
     getQuote();
+  }
+  removeLoadingSpinner();
+}
+
+async function getMovieQuote() {
+  showLoadingSpinner();
+
+  const apiUrl = `https://devlorem.kovah.de/api/1`;
+
+  try {
+    const response = await fetch(proxyUrl + apiUrl);
+    const data = await response.json();
+    const cleanQuote = data.paragraphs[0].replace(/<\/?p[^>]*>/g, "");
+    //Add Author
+    data.source !== ""
+      ? (authorText.innerText = data.source)
+      : (authorText.innerText = 'Unknown');
+    // Add Quote
+    cleanQuote.length > 120 ? quoteText.classList.add("long-quote") : quoteText.classList.remove("long-quote");
+    quoteText.innerText = cleanQuote;
+
+  } catch (error) {
+    console.log("Whoops could not retrieve quotes: " + error);
   }
   removeLoadingSpinner();
 
@@ -82,6 +103,7 @@ function tweetQuote() {
 // Event Listeners
 newQuoteBtn.addEventListener('click', getQuote);
 hackBtn.addEventListener('click', getHackerQuote);
+movieBtn.addEventListener('click', getMovieQuote);
 twitterBtn.addEventListener('click', tweetQuote);
 
 // On Load
