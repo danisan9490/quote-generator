@@ -44,9 +44,7 @@ async function getQuote() {
     console.log("Whoops could not retrieve quotes: " + error);
   }
 }
-// Stop Loader, sow Quote
-removeLoadingSpinner();
-}
+
 
 async function getHackerQuote() {
   showLoadingSpinner();
@@ -57,7 +55,7 @@ async function getHackerQuote() {
 
 
   try {
-    const response = await fetch(proxyURL + apiUrl);
+    const response = await fetch(proxyUrl + apiUrl);
     const data = await response.json();
     authorText.innerText = 'Unknown'
     // reduce fontsize for long quotes
