@@ -23,30 +23,29 @@ function removeLoadingSpinner() {
 // Get Quote From API
 
 async function getQuote() {
-  const countErr = 0;
   showLoadingSpinner();
-  // Proxy URL to make sure our API call
-  const proxyUrl = 'http://cors-anywhere.herokuapp.com/';
-  const apiUrl = 'http://api.forismatic.com/api/1.0/?method=getQuote&lang=en&format=json';
-
+  const proxyUrl = `https://cors-anywhere.herokuapp.com/`;
+  const apiUrl = `http://api.forismatic.com/api/1.0/?method=getQuote&lang=en&format=json`;
   try {
     const response = await fetch(proxyUrl + apiUrl);
     const data = await response.json();
-    // if no author add unknown
-    if (data.quoteAuthor === '') authorText.innerText = 'Unknown';
-    else authorText.innerText = data.quoteAuthor;
-    // reduce fontsize for long quotes
-    if (data.quoteText.length > 120) quoteText.classList.add('long-quote');
-    else quoteText.classList.remove('long-quote')
+    data.quoteAuthor !== ""
+      ? (authorText.innerText = data.quoteAuthor)
+      : (authorText.innerText = data.quoteAuthor);
+
+    // Reduce font-size for long quotes
+    data.quoteText.length > 120
+      ? quoteText.classList.add("long-quote")
+      : quoteText.classList.remove("long-quote");
+
     quoteText.innerText = data.quoteText;
+    removeLoadingSpinner();
   } catch (error) {
-    if (countErr < 10) {
-      getQuote();
-      countErr++;
-    } else console.log(error);
+    console.log("Whoops could not retrieve quotes: " + error);
   }
-  // Stop Loader, sow Quote
-  removeLoadingSpinner();
+}
+// Stop Loader, sow Quote
+removeLoadingSpinner();
 }
 
 async function getHackerQuote() {
