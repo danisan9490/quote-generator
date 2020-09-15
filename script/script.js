@@ -40,8 +40,10 @@ async function getQuote() {
     else quoteText.classList.remove('long-quote')
     quoteText.innerText = data.quoteText;
   } catch (error) {
-    if (countErr < 10) getQuote();
-    else console.log(error);
+    if (countErr < 10) {
+      getQuote();
+      countErr++;
+    } else console.log(error);
   }
   // Stop Loader, sow Quote
   removeLoadingSpinner();
